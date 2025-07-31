@@ -5,7 +5,7 @@ import type { Note, NoteCreate, NoteUpdate } from "../types/note";
 axios.defaults.baseURL = "https://notehub-public.goit.study/api";
 
 
-const myKey = import.meta.env.VITE_NOTEHUB_TOKEN;
+const myKey = import.meta.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 if (!myKey) {
     toast.error("VITE_NOTEHUB_TOKEN is not defined");

@@ -11,7 +11,7 @@ export default function SearchBox({ value, onSearch }: SearchBoxProps) {
     const [inputValue, setInputValue] = useState(value);
     const [debouncedValue] = useDebounce(inputValue, 500);
 
-    // Якщо зовнішнє значення змінюється — оновити локальне
+
     useEffect(() => {
         setInputValue(value);
     }, [value]);
