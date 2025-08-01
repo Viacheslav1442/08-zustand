@@ -49,6 +49,8 @@ export default function NotesClient() {
         placeholderData: keepPreviousData,
     });
 
+    console.log(data);
+
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
