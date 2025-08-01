@@ -1,70 +1,70 @@
 import axios from "axios";
-import toast from "react-hot-toast";
-import type { Note, NoteCreate, NoteUpdate } from "../types/note";
+import type { Note } from "../app/notes/Notes.client";
 
-axios.defaults.baseURL = "https://notehub-public.goit.study/api";
+const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
+const instance = axios.create({
+    baseURL: "https://notehub-public.goit.study/api",
+    headers: {
+        Authorization: `Bearer ${token}`,
+    },
+});
 
-const myKey = import.meta.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
-
-if (!myKey) {
-    toast.error("VITE_NOTEHUB_TOKEN is not defined");
-} else {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${myKey}`;
-}
-
-
-export interface FetchNotesParams {
-    page?: number;
-    perPage?: number;
-    search?: string;
-}
-
-
-export interface FetchNotesResponse {
+interface FetchNotesResponse {
+    notes: Note[];
+    total: number;
     page: number;
     perPage: number;
-    data: Note[];
-    totalPages: number;
 }
 
-interface RawFetchNotesResponse {
-    notes: Note[];
-    totalPages: number;
-}
-
-export const fetchNotes = async ({
+export const fetchNotes = async (
     page = 1,
     perPage = 12,
-    search,
-}: FetchNotesParams): Promise<FetchNotesResponse> => {
-    const response = await axios.get<RawFetchNotesResponse>('/notes', {
-        params: {
-            page,
-            perPage,
-            ...(search ? { search } : {}),
-        },
+    search = ""
+): Promise<FetchNotesResponse> => {
+    const params: Record<string, string | number> = { page, perPage };
+    if (search.trim() !== "") {
+        params.search = search.trim();
+    }
+
+    const res = await instance.get<FetchNotesResponse>("/notes", {
+        params,
     });
-
-    return {
-        page,
-        perPage,
-        data: response.data.notes,
-        totalPages: response.data.totalPages,
-    };
+    return res.data;
 };
 
-export const createNote = async (note: NoteCreate): Promise<Note> => {
-    const response = await axios.post<Note>('/notes', note);
-    return response.data;
+export const addNote = async (newNote: NewNoteData): Promise<Note> => {
+    const res = await instance.post<Note>("/notes", newNote);
+    return res.data;
 };
 
-export const deleteNote = async (id: number): Promise<Note> => {
-    const response = await axios.delete<Note>(`/notes/${id}`);
-    return response.data;
+export const deleteNote = async (id: string): Promise<Note> => {
+    const res = await instance.delete<Note>(`/notes/${id}`);
+    return res.data;
 };
 
-export const updateNote = async (id: number, updates: NoteUpdate): Promise<Note> => {
-    const response = await axios.patch<Note>(`/notes/${id}`, updates);
-    return response.data;
+export interface NoteFormProps {
+    onClose: () => void;
+}
+
+export const fetchNoteById = async (id: string): Promise<Note> => {
+    const res = await instance.get<Note>(`/notes/${id}`);
+    return res.data;
 };
+
+export interface NewNoteData {
+    title: string;
+    content: string;
+    tag: string;
+}
+// type PropsByID = {
+//   params: Promise<{ id: string }>;
+// };
+
+// const fetchNotesByID = async ({params}: PropsByID) => {
+//   const { id } = await params;
+//   console.log('note id:', id);
+//   return <div>NoteDetails</div>
+// }
+
+// export default fetchNotesByID;
