@@ -6,13 +6,14 @@ import css from "../../main.module.css";
 import type { Note } from "../Notes.client";
 
 interface NoteDetailsProps {
-    noteId: number;
+    noteId: string;
 }
 
 export default function NoteDetailsClient({ noteId }: NoteDetailsProps) {
     const { data: note, isLoading, error } = useQuery<Note>({
         queryKey: ["note", noteId],
-        queryFn: () => fetchNoteById(noteId.toString()),
+        queryFn: () => fetchNoteById(noteId),
+        refetchOnMount: false,
     });
 
     if (isLoading) return <p>Loading, please wait...</p>;

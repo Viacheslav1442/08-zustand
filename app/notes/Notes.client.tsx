@@ -12,27 +12,25 @@ import { fetchNotes } from "../../lib/api";
 import Pagination from "../../components/Pagination/Pagination";
 
 export interface Note {
-    id: number;
+    id: string; // тип виправлено на string
     title: string;
     content: string;
-    tag: string;
+    tag: "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
     createdAt: string;
 }
 
-export interface NewNoteData {
-    title: string;
-    content: string;
-    tag: string;
-}
-
-interface FetchNoteResponse {
+export interface FetchNoteResponse {
     notes: Note[];
     total: number;
     page: number;
     perPage: number;
 }
 
-export default function NotesClient() {
+interface NotesClientProps {
+    initialData: FetchNoteResponse;
+}
+
+export default function NotesClient({ initialData }: NotesClientProps) {
     const [isModalOpen, setModalOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
@@ -47,9 +45,8 @@ export default function NotesClient() {
         queryKey: ["notes", page, debouncedSearchTerm],
         queryFn: () => fetchNotes(page, perPage, debouncedSearchTerm),
         placeholderData: keepPreviousData,
+        initialData: page === 1 && debouncedSearchTerm === "" ? initialData : undefined,
     });
-
-    console.log(data);
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);

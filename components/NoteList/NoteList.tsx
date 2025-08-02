@@ -12,7 +12,7 @@ export default function NoteList({ notes }: NoteListProps) {
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (id: string) => deleteNote(id.toString()),
+        mutationFn: (id: string) => deleteNote(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["notes"] });
         },
@@ -30,10 +30,15 @@ export default function NoteList({ notes }: NoteListProps) {
                     <p className={css.content}>{item.content}</p>
                     <div className={css.footer}>
                         <span className={css.tag}>{item.tag}</span>
-                        <Link href={"/app/notes/ViewDetails.client.tsx"}>View details</Link>
+
+
+                        <Link href={`/notes/${item.id}`} className={css.detailsLink}>
+                            View details
+                        </Link>
+
                         <button
                             className={css.button}
-                            onClick={() => handleDelete(item.id.toString())}
+                            onClick={() => handleDelete(item.id)}
                             disabled={mutation.status === "pending"}
                         >
                             {mutation.status === "pending" ? "Deleting..." : "Delete"}

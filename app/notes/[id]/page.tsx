@@ -4,22 +4,22 @@ import NoteDetailsClient from "./NoteDetails.client";
 import { HydrationBoundary } from "@tanstack/react-query";
 
 interface NoteDetailsProps {
-    params: Promise<{ id: number }>;
+    params: { id: string }; // ✅ правильний тип — рядок
 }
 
 export default async function NoteDetails({ params }: NoteDetailsProps) {
-    const { id } = await params;
+    const { id } = params;
 
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery({
         queryKey: ["note", id],
-        queryFn: () => fetchNoteById(id.toString()),
+        queryFn: () => fetchNoteById(id),
     });
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <NoteDetailsClient noteId={id} />
+            <NoteDetailsClient noteId={id} /> {/* ✅ передаємо рядок */}
         </HydrationBoundary>
     );
 }
