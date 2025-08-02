@@ -12,7 +12,7 @@ import { fetchNotes } from "../../lib/api";
 import Pagination from "../../components/Pagination/Pagination";
 
 export interface Note {
-    id: string; // тип виправлено на string
+    id: string;
     title: string;
     content: string;
     tag: "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
