@@ -1,16 +1,21 @@
-import { fetchNotes } from "@/lib/api";
-import NotesClient from "./NotesClient";
-import type { Note } from "@/types/note";
+import { QueryClient, dehydrate } from "@tanstack/react-query";
+import { HydrationBoundary } from "@tanstack/react-query";
+import NotesClient from "./Notes.client";
+import { fetchNotes } from "../../lib/api";
 
 export default async function NotesPage() {
-    let notes: Note[] = [];
+    const queryClient = new QueryClient();
 
-    try {
-        const response = await fetchNotes(1, 12, "");
-        notes = response.notes;
-    } catch (error) {
-        console.error("Failed to load notes:", error);
-    }
+    const initialData = await fetchNotes(1, 12, "");
 
-    return <NotesClient initialNotes={notes} />;
+    await queryClient.prefetchQuery({
+        queryKey: ["notes", 1, ""],
+        queryFn: () => fetchNotes(1, 12, ""),
+    });
+
+    return (
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <NotesClient initialData={initialData} />
+        </HydrationBoundary>
+    );
 }
