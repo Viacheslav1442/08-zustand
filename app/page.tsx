@@ -14,8 +14,17 @@ export default async function NotesPage() {
   });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <NotesClient initialData={initialData} />
-    </HydrationBoundary>
+    <main>
+      <header>
+        <h1>NoteHub – Your Notes in One Place</h1>
+        <p>Browse and manage your personal notes easily and efficiently.</p>
+      </header>
+
+      <section aria-label="List of Notes">
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <NotesClient initialData={initialData} />
+        </HydrationBoundary>
+      </section>
+    </main>
   );
 }
