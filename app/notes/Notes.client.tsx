@@ -11,7 +11,7 @@ import { useDebounce } from "use-debounce";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchNotes, FetchNotesResponse } from "../../lib/api";
 import Pagination from "../../components/Pagination/Pagination";
-import { Note } from "@/types/note";
+import type { Note } from "../../types/note"
 
 interface NotesClientProps {
     initialData: FetchNotesResponse;
