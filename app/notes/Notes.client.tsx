@@ -9,6 +9,7 @@ import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
 import { fetchNotes, FetchNotesResponse } from '@/lib/api';
 import NoteForm from '@/components/NoteForm/NoteForm';
+import type { Note } from "../../types/note";
 
 import css from '../page.module.css';
 
