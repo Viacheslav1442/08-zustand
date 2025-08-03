@@ -8,6 +8,12 @@ interface PaginationProps {
 }
 
 export default function Pagination({ pageCount, currentPage, onPageChange }: PaginationProps) {
+    type PageChangeEvent = { selected: number };
+
+    const handlePageChange = (event: PageChangeEvent) => {
+        onPageChange(event.selected + 1);
+    };
+
     return (
         <ReactPaginate
             previousLabel={"←"}
@@ -17,7 +23,7 @@ export default function Pagination({ pageCount, currentPage, onPageChange }: Pag
             forcePage={currentPage - 1}
             marginPagesDisplayed={1}
             pageRangeDisplayed={3}
-            onPageChange={(event) => onPageChange(event.selected + 1)}
+            onPageChange={handlePageChange}
             containerClassName={css.pagination}
             activeClassName={css.active}
             disabledClassName={css.disabled}
