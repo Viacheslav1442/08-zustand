@@ -10,7 +10,7 @@ import Pagination from '@/components/Pagination/Pagination';
 import { fetchNotes, FetchNotesResponse } from '@/lib/api';
 import NoteForm from '@/components/NoteForm/NoteForm';
 
-import css from './page.module.css';
+import css from '../page.module.css';
 
 interface NotesClientProps {
     initialData: FetchNotesResponse;
