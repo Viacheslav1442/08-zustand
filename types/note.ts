@@ -13,6 +13,13 @@ export interface NewNoteData {
     tag: NoteTag;
 }
 
+export interface FetchNoteResponse {
+    notes: Note[];
+    total: number;
+    page: number;
+    perPage: number;
+}
+
 
 
 export type NoteTag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
