@@ -1,6 +1,11 @@
-import Notes from '../../../../app/notes/Notes.client';
+import Notes from '../[...slug]/Notes.client';
 
-export default function NotesPage({ params }: { params: { slug?: string[] } }) {
-    const tag = params.slug?.[0]; // або undefined для "All notes"
+interface PageProps {
+    params: { slug?: string[] } | Promise<{ slug?: string[] }>;
+}
+
+export default async function NotesPage({ params }: PageProps) {
+    const resolvedParams = params instanceof Promise ? await params : params;
+    const tag = resolvedParams.slug?.[0];
     return <Notes tag={tag} />;
 }
