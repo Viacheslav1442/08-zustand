@@ -1,5 +1,6 @@
-import Link from 'next/link'
-import css from './Header.module.css'
+import Link from 'next/link';
+import css from '../Header/Header.module.css';
+import TagsMenu from '../TagsMenu/TagsMenu'; // Додай імпорт
 
 const Header = () => {
     return (
@@ -13,15 +14,12 @@ const Header = () => {
                         <Link href="/">Home</Link>
                     </li>
                     <li>
-                        <Link href="/notes">Notes</Link>
+                        <TagsMenu /> {/* ← Ось тут */}
                     </li>
                 </ul>
             </nav>
         </header>
-
     );
-}
-
-
+};
 
 export default Header;
