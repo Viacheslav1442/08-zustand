@@ -2,11 +2,8 @@ import Notes from '../[...slug]/Notes.client';
 
 
 type Props = {
-    params: {
-        slug?: string[];
-    };
+    params: Promise<{ slug?: string[] }>;
 };
-
 
 
 
