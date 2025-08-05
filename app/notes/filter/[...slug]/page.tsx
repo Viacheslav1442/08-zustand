@@ -11,7 +11,9 @@ type Props = {
 
 
 
-export default function NotesPage({ params }: Props) {
-    const tag = params.slug?.[0];
+
+export default async function NotesPage({ params }: Props) {
+    const resolvedParams = await params;
+    const tag = resolvedParams.slug?.[0];
     return <Notes tag={tag} />;
 }
