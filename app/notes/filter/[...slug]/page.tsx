@@ -3,11 +3,12 @@ import { fetchNotes } from "@/lib/api";
 import NotesClient from "./Notes.client";
 
 type Props = {
-    params: { slug?: string[] };
+    params: Promise<{ slug?: string[] }>;
 };
 
-const Page = async ({ params }: Props) => {
-    const tag = params.slug?.[0] ?? "All";
+export default async function Page({ params }: Props) {
+    const resolvedParams = await params;  // Ось тут "чекаємо" Promise
+    const tag = resolvedParams.slug?.[0] ?? "All";
 
     const data: FetchNoteResponse =
         tag === "All"
@@ -15,6 +16,4 @@ const Page = async ({ params }: Props) => {
             : await fetchNotes(1, 12, "", tag);
 
     return <NotesClient initialData={data} tag={tag} />;
-};
-
-export default Page;
+}
