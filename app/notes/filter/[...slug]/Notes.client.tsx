@@ -31,9 +31,7 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
                     <li key={note.id}>
                         <h3>{note.title}</h3>
                         <ul>
-                            {note.tags.map((t) => (
-                                <li key={t}>{t}</li>
-                            ))}
+                            <li>{note.tag}</li>
                         </ul>
                     </li>
                 ))}
