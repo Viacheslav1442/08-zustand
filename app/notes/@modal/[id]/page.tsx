@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { fetchNoteById } from "@/lib/api";
 import NotePreview from "../../../../components/NotePreview/NotePreview";
-import styles from "./ModalNote.module.css";
+import styles from "../../../../css/Modal.module.css";
 import { useRouter } from "next/navigation";
 
 type Props = {
