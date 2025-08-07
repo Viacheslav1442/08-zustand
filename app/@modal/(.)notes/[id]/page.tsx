@@ -1,15 +1,15 @@
-import { ReactNode } from "react";
 import { fetchNoteById } from "@/lib/api";
-import NotePreview from "../../../../components/NotePreview/NotePreview";
-import styles from "../../../../css/Modal.module.css";
-import { useRouter } from "next/navigation";
+import NotePreview from "@/components/NotePreview/NotePreview";
+import styles from "@/css/Modal.module.css";
 
 type Props = {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 };
 
 export default async function NoteModalPage({ params }: Props) {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams;
+
     const note = await fetchNoteById(id);
 
     return (
