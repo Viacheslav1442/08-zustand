@@ -10,7 +10,6 @@ type Props = {
 
 export default async function NoteModalPage({ params }: Props) {
     const { id } = params;
-
     const note = await fetchNoteById(id);
 
     return (
