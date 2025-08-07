@@ -11,8 +11,8 @@ interface NotesClientProps {
 }
 
 export default function NotesClient({ initialData, tag }: NotesClientProps) {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage] = useState(1);
+    const [searchQuery] = useState("");
 
     const { data } = useQuery<FetchNoteResponse>({
         queryKey: ["notes", searchQuery, currentPage, tag],
@@ -31,7 +31,7 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
                     <li key={note.id}>
                         <h3>{note.title}</h3>
                         <ul>
-                            {note.tags.map((t) => (
+                            {note.data.map((t) => (
                                 <li key={t}>{t}</li>
                             ))}
                         </ul>
