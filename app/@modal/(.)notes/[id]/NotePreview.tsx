@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import styles from "../../css/NotePreview.module.css";
+import styles from "../../../../css/NotePreview.module.css";
 import type { Note } from "@/types/note";
 
 type Props = {
