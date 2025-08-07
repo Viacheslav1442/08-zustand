@@ -9,7 +9,10 @@ export default async function NotesPage({
 }) {
     const tag = params.slug?.[0] ?? "All";
 
-    const data: FetchNoteResponse = await fetchNotes(1, 12, "", tag);
+
+    const data: FetchNoteResponse = tag === "All"
+        ? await fetchNotes(1, 12, "")
+        : await fetchNotes(1, 12, "", tag);
 
     return <NotesClient initialData={data} tag={tag} />;
 }
