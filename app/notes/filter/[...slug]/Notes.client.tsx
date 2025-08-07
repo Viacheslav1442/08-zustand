@@ -24,14 +24,14 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
 
     return (
         <div>
-            <h2>Notes filtered by "{tag}"</h2>
+            <h2>Notes filtered by &quot;{tag}&quot;</h2>
 
             <ul>
                 {data?.notes.map((note: Note) => (
                     <li key={note.id}>
                         <h3>{note.title}</h3>
                         <ul>
-                            {note.data.map((t) => (
+                            {note.tag.map((t) => (
                                 <li key={t}>{t}</li>
                             ))}
                         </ul>
