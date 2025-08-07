@@ -11,13 +11,11 @@ type Props = {
 export default async function NoteModalPage({ params }: Props) {
     const { id } = params;
 
-
     const note = await fetchNoteById(id);
 
     return (
         <div className={styles.modalBackdrop}>
             <NotePreview note={note} />
-            {/* Кнопка або логіка закриття модалки */}
         </div>
     );
 }
