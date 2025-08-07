@@ -7,7 +7,7 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-    const resolvedParams = await params;  // Ось тут "чекаємо" Promise
+    const resolvedParams = await params;
     const tag = resolvedParams.slug?.[0] ?? "All";
 
     const data: FetchNoteResponse =
