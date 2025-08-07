@@ -1,41 +1,38 @@
-interface NotesProps {
-    tag?: string;
+"use client";
+
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNotes } from "@/lib/api";
+import type { FetchNoteResponse, Note, NoteTag } from "@/types/note";
+
+interface NotesClientProps {
+    initialData: FetchNoteResponse;
+    tag: NoteTag | string;
 }
 
-interface Note {
-    id: number;
-    title: string;
-    tags: string[];
-}
+export default function NotesClient({ initialData, tag }: NotesClientProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState("");
 
-export default function Notes({ tag }: NotesProps) {
-    const notes: Note[] = [
-        { id: 1, title: "Note 1", tags: ["Work", "Important"] },
-        { id: 2, title: "Note 2", tags: ["Personal"] },
-        { id: 3, title: "Note 3", tags: ["Work"] },
-    ];
-
-    const filteredNotes =
-        tag && tag !== "All"
-            ? notes.filter((note) =>
-                note.tags.some((t) => t.toLowerCase() === tag.toLowerCase())
-            )
-            : notes;
+    const { data } = useQuery<FetchNoteResponse>({
+        queryKey: ["notes", searchQuery, currentPage, tag],
+        queryFn: () =>
+            fetchNotes(currentPage, 12, searchQuery, tag !== "All" ? tag : "All"),
+        initialData,
+        placeholderData: () => initialData,
+    });
 
     return (
-        <div className="notes">
-            <h2 className="notes__title">
-                Notes {tag ? ` - Filtered by "${tag}"` : ""}
-            </h2>
-            <ul className="notes__list">
-                {filteredNotes.map((note) => (
-                    <li key={note.id} className="note">
-                        <h3 className="note__title">{note.title}</h3>
-                        <ul className="note__tags">
+        <div>
+            <h2>Notes filtered by "{tag}"</h2>
+
+            <ul>
+                {data?.notes.map((note: Note) => (
+                    <li key={note.id}>
+                        <h3>{note.title}</h3>
+                        <ul>
                             {note.tags.map((t) => (
-                                <li key={t} className="note__tag">
-                                    {t}
-                                </li>
+                                <li key={t}>{t}</li>
                             ))}
                         </ul>
                     </li>
