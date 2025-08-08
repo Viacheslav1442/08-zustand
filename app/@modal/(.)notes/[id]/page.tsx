@@ -1,5 +1,5 @@
 import { fetchNoteById } from "@/lib/api";
-import NotePreview from "@/components/NotePreview/NotePreview";
+import NotePreview from "../[id]/NotePreview";
 import styles from "@/css/Modal.module.css";
 
 type Props = {
