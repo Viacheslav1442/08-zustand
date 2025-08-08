@@ -1,12 +1,18 @@
-export default function FilterLayout({
+export default function Layout({
     children,
+    sidebar,
 }: {
     children: React.ReactNode;
+    sidebar: React.ReactNode;
 }) {
     return (
-        <div style={{ padding: "1rem" }}>
-            <h1>Фільтрація нотаток</h1>
-            <div>{children}</div>
+        <div className="filter-layout">
+            <aside className="filter-sidebar">
+                {sidebar}
+            </aside>
+            <main className="filter-main">
+                {children}
+            </main>
         </div>
     );
 }
