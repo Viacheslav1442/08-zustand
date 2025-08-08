@@ -9,6 +9,7 @@ import { addNote } from '@/lib/api'
 
 export interface NoteFormProps {
     onClose: () => void;
+    onSuccess?: () => void;
 }
 
 
