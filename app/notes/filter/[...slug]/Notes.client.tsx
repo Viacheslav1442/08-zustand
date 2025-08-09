@@ -1,67 +1,75 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchNotes } from "@/lib/api";
-import type { FetchNoteResponse, NoteTag } from "@/types/note";
-import Pagination from "../../../../components/Pagination/Pagination";
-import Modal from "../../../../components/Modal/Modal";
-import NoteForm from "../../../../components/NoteForm/NoteForm";
-import NoteList from "../../../../components/NoteList/NoteList";
+import { useState } from 'react';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useDebouncedCallback } from 'use-debounce';
+import Modal from '@/components/Modal/Modal';
+import NoteList from '@/components/NoteList/NoteList';
+import SearchBox from '@/components/SearchBox/SearchBox';
+import Pagination from '@/components/Pagination/Pagination';
+import NoteForm from '@/components/NoteForm/NoteForm';
+import { fetchNotes, FetchNotesResponse } from '@/lib/api';
+import css from '../../../../css/NotesPage.module.css'
+import { NoteTag } from '@/types/note';
 
 interface NotesClientProps {
-    initialData: FetchNoteResponse;
+    initialData: FetchNotesResponse;
     tag: NoteTag | string;
 }
 
 export default function NotesClient({ initialData, tag }: NotesClientProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const limit = 12;
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [tag]);
-
-    const { data } = useQuery<FetchNoteResponse>({
-        queryKey: ["notes", currentPage, tag],
-        queryFn: () => fetchNotes(currentPage, limit, tag === "All" ? "" : tag),
+    const { data } = useQuery({
+        queryKey: ['notes', searchQuery, currentPage, tag],
+        queryFn: () =>
+            fetchNotes(
+                currentPage,
+                12,
+                searchQuery,
+                tag !== 'All' ? tag : undefined
+            ),
         initialData,
-        placeholderData: () => initialData,
     });
 
-    const totalPages = Math.ceil((data?.total ?? 0) / limit);
+    const toggleModal = () => setIsModalOpen((prev) => !prev);
+    const changeSearchQuery = useDebouncedCallback((newQuery: string) => {
+        setCurrentPage(1);
+        setSearchQuery(newQuery);
+    }, 300);
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+    const totalPages = data?.totalPages ?? 0;
+    const notes = data?.notes ?? [];
 
     return (
-        <div>
-            <h2>Notes filtered by &quot;{tag}&quot;</h2>
+        <div className={css.app}>
+            <main>
+                <section>
+                    <header className={css.toolbar}>
+                        <SearchBox value={searchQuery}
+                            onChange={changeSearchQuery} />
+                        {totalPages > 1 && (
+                            <Pagination
+                                totalPages={totalPages}
+                                currentPage={currentPage}
+                                onPageChange={setCurrentPage}
+                            />
+                        )}
+                        <button className={css.button} onClick={toggleModal}>
+                            Create note +
+                        </button>
+                    </header>
 
-            <button onClick={() => setIsModalOpen(true)}>Add Note</button>
-
-            {data?.notes?.length ? (
-                <NoteList notes={data.notes} />
-            ) : (
-                <p>No notes found.</p>
-            )}
-
-            {totalPages > 1 && (
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
-            )}
-
-            {isModalOpen && (
-                <Modal onClose={() => setIsModalOpen(false)}>
-                    <NoteForm onClose={() => setIsModalOpen(false)} />
-                </Modal>
-            )}
+                    {isModalOpen && (
+                        <Modal onClose={toggleModal}>
+                            <NoteForm onClose={toggleModal} />
+                        </Modal>
+                    )}
+                    {notes.length > 0 && <NoteList notes={notes} />}
+                </section>
+            </main>
         </div>
     );
 }
