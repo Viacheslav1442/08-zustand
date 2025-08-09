@@ -1,5 +1,5 @@
-import type { FetchNoteResponse } from "@/types/note";
-import { fetchNotes, FetchNotesResponse } from "@/lib/api";
+import type { FetchNotesResponse } from "@/lib/api";
+import { fetchNotes } from "@/lib/api";
 import NotesClient from "../[...slug]/Notes.client";
 
 type Props = {
@@ -10,10 +10,12 @@ export default async function Page({ params }: Props) {
     const resolvedParams = await params;
     const tag = resolvedParams.slug?.[0] ?? "All";
 
+    const data: FetchNotesResponse = await fetchNotes(
+        1,
+        12,
+        "",  // search порожній
+        tag !== "All" ? tag : undefined
+    );
 
-    const data: FetchNotesResponse = await fetchNotes(1, 12, tag);
-
-
-
-    return <NotesClient initialData={data} tag="All" />
+    return <NotesClient initialData={data} tag={tag} />;
 }
