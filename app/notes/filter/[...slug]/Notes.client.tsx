@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 import { fetchNotes } from "@/lib/api";
@@ -24,6 +24,11 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
     const limit = 12;
     const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [tag, debouncedSearchQuery]);
+
     const { data } = useQuery<FetchNoteResponse>({
         queryKey: ["notes", debouncedSearchQuery, currentPage, tag],
         queryFn: () =>
@@ -37,16 +42,15 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
         placeholderData: () => initialData,
     });
 
+    const totalPages = Math.ceil((data?.total ?? 0) / limit);
+
     const handleSearch = (value: string) => {
         setSearchQuery(value);
-        setCurrentPage(1);
     };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
-
-    const totalPages = Math.ceil((data?.total ?? 0) / limit);
 
     return (
         <div>
