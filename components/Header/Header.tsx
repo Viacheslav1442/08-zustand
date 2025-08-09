@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import css from '../Header/Header.module.css';
-import TagsMenu from '../TagsMenu/TagsMenu'; // Додай імпорт
+import TagsMenu from '../TagsMenu/TagsMenu';
 
 const Header = () => {
     return (

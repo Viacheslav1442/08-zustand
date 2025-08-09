@@ -10,10 +10,7 @@ export default async function Page({ params }: Props) {
     const resolvedParams = await params;
     const tag = resolvedParams.slug?.[0] ?? "All";
 
-    const data: FetchNoteResponse =
-        tag === "All"
-            ? await fetchNotes(1, 12, "")
-            : await fetchNotes(1, 12, "", tag);
+    const data: FetchNoteResponse = await fetchNotes(1, 12, tag === "All" ? "" : tag);
 
     return <NotesClient initialData={data} tag={tag} />;
 }

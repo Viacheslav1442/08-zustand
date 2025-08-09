@@ -7,7 +7,7 @@ export const metadata = { title: 'NoteHub' };
 
 type RootLayoutProps = {
   children: React.ReactNode;
-  modal: React.ReactNode; // додаємо modal для паралельного маршруту
+  modal: React.ReactNode;
 };
 
 export default function RootLayout({ children, modal }: RootLayoutProps) {
