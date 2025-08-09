@@ -24,7 +24,6 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
     const limit = 12;
     const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-
     useEffect(() => {
         setCurrentPage(1);
     }, [tag, debouncedSearchQuery]);
@@ -36,7 +35,7 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
                 currentPage,
                 limit,
                 debouncedSearchQuery,
-                tag !== "All" ? tag : ""
+                tag === "All" ? "" : tag
             ),
         initialData,
         placeholderData: () => initialData,
