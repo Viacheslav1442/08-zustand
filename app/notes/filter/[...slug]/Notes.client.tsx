@@ -22,8 +22,6 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const limit = 12;
-
-
     const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
     const { data } = useQuery<FetchNoteResponse>({
@@ -56,7 +54,11 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
 
             <button onClick={() => setIsModalOpen(true)}>Add Note</button>
 
-            <NoteList notes={data?.notes ?? []} />
+            {data?.notes?.length ? (
+                <NoteList notes={data.notes} />
+            ) : (
+                <p>No notes found.</p>
+            )}
 
             <Pagination
                 currentPage={currentPage}
@@ -66,10 +68,7 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
 
             {isModalOpen && (
                 <Modal onClose={() => setIsModalOpen(false)}>
-                    <NoteForm
-                        onClose={() => setIsModalOpen(false)}
-                        onSuccess={() => setIsModalOpen(false)}
-                    />
+                    <NoteForm onClose={() => setIsModalOpen(false)} />
                 </Modal>
             )}
         </div>

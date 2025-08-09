@@ -4,7 +4,7 @@ import Link from "next/link";
 import css from "../../css/TagsMenu.module.css";
 import { useState } from "react";
 
-const tags = ["All", "Todo", "Meeting", "Shopping"];
+const tags = ["All", "Todo", "Meeting", "Shopping", "Work", "Personal"];
 
 const TagsMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
