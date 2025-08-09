@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const TAGS = ["All", "work", "personal", "important"] as const;
+const TAGS = ["All", "Todo", "Work", "Personal", "Meeting", "Shopping"] as const;
 
 export default function SidebarDefault() {
     return (
@@ -10,11 +10,8 @@ export default function SidebarDefault() {
 
                 <ul>
                     {TAGS.map((tag) => {
-                        const href = tag === "All" ? "/notes" : `/notes/filter/${tag}`;
-                        const label =
-                            tag === "All"
-                                ? "All notes"
-                                : tag.charAt(0).toUpperCase() + tag.slice(1);
+                        const href = `/notes/filter/${tag}`;
+                        const label = tag === "All" ? "All notes" : tag;
 
                         return (
                             <li key={tag}>

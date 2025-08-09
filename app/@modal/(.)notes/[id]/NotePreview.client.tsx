@@ -18,10 +18,20 @@ export default function NotePreview({ id }: Props) {
     const { data: note, isLoading, isError } = useQuery<Note>({
         queryKey: ["note", id],
         queryFn: () => fetchNoteById(id),
+        enabled: Boolean(id),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
     });
 
     const closeModal = () => {
         router.back();
+    };
+
+    const formatDate = (iso?: string) => {
+        if (!iso) return null;
+        const t = Date.parse(iso);
+        if (isNaN(t)) return iso;
+        return new Date(t).toLocaleString();
     };
 
     return (
@@ -38,7 +48,18 @@ export default function NotePreview({ id }: Props) {
                     <>
                         <h2>{note.title}</h2>
                         <p>{note.content}</p>
-                        {/* додатковий контент нотатки */}
+
+                        {note.tag && (
+                            <p className={styles.meta}>
+                                <strong>Tag:</strong> {note.tag}
+                            </p>
+                        )}
+
+                        {note.createdAt && (
+                            <p className={styles.meta}>
+                                <strong>Created:</strong> {formatDate(note.createdAt)}
+                            </p>
+                        )}
                     </>
                 )}
             </div>

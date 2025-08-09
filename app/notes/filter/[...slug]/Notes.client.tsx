@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "use-debounce";
 import { fetchNotes } from "@/lib/api";
 import type { FetchNoteResponse, NoteTag } from "@/types/note";
 import SearchBox from "../../../../components/SearchBox/SearchBox";
@@ -22,10 +23,18 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
 
     const limit = 12;
 
+
+    const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+
     const { data } = useQuery<FetchNoteResponse>({
-        queryKey: ["notes", searchQuery, currentPage, tag],
+        queryKey: ["notes", debouncedSearchQuery, currentPage, tag],
         queryFn: () =>
-            fetchNotes(currentPage, limit, searchQuery, tag !== "All" ? tag : "All"),
+            fetchNotes(
+                currentPage,
+                limit,
+                debouncedSearchQuery,
+                tag !== "All" ? tag : "All"
+            ),
         initialData,
         placeholderData: () => initialData,
     });
