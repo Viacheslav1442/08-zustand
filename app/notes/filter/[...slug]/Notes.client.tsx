@@ -31,7 +31,7 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
                 currentPage,
                 limit,
                 debouncedSearchQuery,
-                tag !== "All" ? tag : "All"
+                tag !== "All" ? tag : ""
             ),
         initialData,
         placeholderData: () => initialData,
@@ -45,6 +45,8 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+
+    const totalPages = Math.ceil((data?.total ?? 0) / limit);
 
     return (
         <div>
@@ -60,11 +62,13 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
                 <p>No notes found.</p>
             )}
 
-            <Pagination
-                currentPage={currentPage}
-                totalPages={Math.ceil((data?.total ?? 0) / limit)}
-                onPageChange={handlePageChange}
-            />
+            {totalPages > 1 && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+            )}
 
             {isModalOpen && (
                 <Modal onClose={() => setIsModalOpen(false)}>
