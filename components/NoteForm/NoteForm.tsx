@@ -5,6 +5,10 @@ import { useNoteStore } from "../../lib/store/noteStore";
 import css from "./NoteForm.module.css";
 import { useRouter } from "next/navigation";
 
+type NoteForm = {
+    onClose: () => void;
+};
+
 export default function NoteForm() {
     const router = useRouter();
     const { draft, setDraft, clearDraft } = useNoteStore();
