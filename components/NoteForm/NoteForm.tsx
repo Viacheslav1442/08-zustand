@@ -5,11 +5,11 @@ import { useNoteStore } from "../../lib/store/noteStore";
 import css from "./NoteForm.module.css";
 import { useRouter } from "next/navigation";
 
-type NoteForm = {
+type NoteFormProps = {
     onClose: () => void;
 };
 
-export default function NoteForm() {
+export default function NoteForm({ onClose }: NoteFormProps) {
     const router = useRouter();
     const { draft, setDraft, clearDraft } = useNoteStore();
 
@@ -41,9 +41,8 @@ export default function NoteForm() {
     };
 
     const handleCancel = () => {
-        router.back();
+        onClose();
     };
-
     return (
         <form className={css.form} onSubmit={handleSubmit}>
             <label className={css.label}>
