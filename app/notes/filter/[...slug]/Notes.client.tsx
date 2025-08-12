@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import css from "./NotesClient.module.css";
+import css from "../../../main.module.css";
 
 export default function NotesClient() {
     return (
