@@ -1,75 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { useDebouncedCallback } from 'use-debounce';
-import Modal from '@/components/Modal/Modal';
-import NoteList from '@/components/NoteList/NoteList';
-import SearchBox from '@/components/SearchBox/SearchBox';
-import Pagination from '@/components/Pagination/Pagination';
-import NoteForm from '@/components/NoteForm/NoteForm';
-import { fetchNotes, FetchNotesResponse } from '@/lib/api';
-import css from '../../../../css/NotesPage.module.css'
-import { NoteTag } from '@/types/note';
+import Link from "next/link";
+import css from "./NotesClient.module.css";
 
-interface NotesClientProps {
-    initialData: FetchNotesResponse;
-    tag: NoteTag | string;
-}
-
-export default function NotesClient({ initialData, tag }: NotesClientProps) {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const { data } = useQuery({
-        queryKey: ['notes', searchQuery, currentPage, tag],
-        queryFn: () =>
-            fetchNotes(
-                currentPage,
-                12,
-                searchQuery,
-                tag !== 'All' ? tag : undefined
-            ),
-        initialData,
-    });
-
-    const toggleModal = () => setIsModalOpen((prev) => !prev);
-    const changeSearchQuery = useDebouncedCallback((newQuery: string) => {
-        setCurrentPage(1);
-        setSearchQuery(newQuery);
-    }, 300);
-
-    const totalPages = data?.totalPages ?? 0;
-    const notes = data?.notes ?? [];
-
+export default function NotesClient() {
     return (
-        <div className={css.app}>
-            <main>
-                <section>
-                    <header className={css.toolbar}>
-                        <SearchBox value={searchQuery}
-                            onChange={changeSearchQuery} />
-                        {totalPages > 1 && (
-                            <Pagination
-                                totalPages={totalPages}
-                                currentPage={currentPage}
-                                onPageChange={setCurrentPage}
-                            />
-                        )}
-                        <button className={css.button} onClick={toggleModal}>
-                            Create note +
-                        </button>
-                    </header>
-
-                    {isModalOpen && (
-                        <Modal onClose={toggleModal}>
-                            <NoteForm onClose={toggleModal} />
-                        </Modal>
-                    )}
-                    {notes.length > 0 && <NoteList notes={notes} />}
-                </section>
-            </main>
+        <div className={css.header}>
+            <h1>Notes</h1>
+            <Link href="/notes/action/create" className={css.createButton}>
+                + Create note
+            </Link>
+            {/* Тут твоя логіка відображення списку нотаток */}
         </div>
     );
 }
