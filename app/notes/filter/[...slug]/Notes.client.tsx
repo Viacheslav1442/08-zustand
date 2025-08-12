@@ -9,9 +9,8 @@ import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
 import NoteForm from '@/components/NoteForm/NoteForm';
 import { fetchNotes, FetchNotesResponse } from '@/lib/api';
-import css from '../../../../css/NotesPage.module.css'
+import css from '../[...slug]/NotesPage.module.css'
 import { NoteTag } from '@/types/note';
-import { ModalProps } from "../../../../components/Modal/Modal";
 
 interface NotesClientProps {
     initialData: FetchNotesResponse;
@@ -64,8 +63,8 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
                     </header>
 
                     {isModalOpen && (
-                        <Modal onClose={toggleModal}>
-                            <NoteForm onClose={toggleModal} />
+                        <Modal onClose={handleCloseModal}>
+                            <NoteForm onClose={handleCloseModal} />
                         </Modal>
                     )}
                     {notes.length > 0 && <NoteList notes={notes} />}
