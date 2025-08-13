@@ -1,9 +1,5 @@
-"use client";
-
 import { useRouter } from "next/navigation";
 import NoteForm from "@/components/NoteForm/NoteForm";
-import css from "./CreateNotePage.module.css";
-
 
 const baseUrl = process.env.BASE_URL;
 
@@ -26,9 +22,9 @@ export default function CreateNotePage() {
     };
 
     return (
-        <main className={css.main}>
-            <div className={css.container}>
-                <h1 className={css.title}>Create note</h1>
+        <main>
+            <div>
+                <h1>Create note</h1>
                 <NoteForm onClose={handleClose} />
             </div>
         </main>
