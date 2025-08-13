@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useNoteStore } from "../../lib/store/noteStore";
-import css from "./NoteForm.module.css";
+import css from "../../css/NoteForm.module.css";
 import { useRouter } from "next/navigation";
 
 type NoteFormProps = {
