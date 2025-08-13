@@ -1,7 +1,6 @@
-import { useRouter } from "next/navigation";
-import NoteForm from "@/components/NoteForm/NoteForm";
+import CreateNotePageClient from "./CreateNotePage.client";
 
-const baseUrl = process.env.BASE_URL;
+const baseUrl = process.env.BASE_URL ?? "http://localhost:3000";
 
 export const metadata = {
     title: "Create Note - NoteHub",
@@ -15,18 +14,5 @@ export const metadata = {
 };
 
 export default function CreateNotePage() {
-    const router = useRouter();
-
-    const handleClose = () => {
-        router.back();
-    };
-
-    return (
-        <main>
-            <div>
-                <h1>Create note</h1>
-                <NoteForm onClose={handleClose} />
-            </div>
-        </main>
-    );
+    return <CreateNotePageClient />;
 }

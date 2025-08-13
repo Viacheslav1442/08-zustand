@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         hostname: "ac.goit.global",
+        pathname: "/fullstack/react/**",
       },
     ],
   },
