@@ -1,15 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
-import Modal from '@/components/Modal/Modal';
+import Link from 'next/link';
+
 import NoteList from '@/components/NoteList/NoteList';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
-import NoteForm from '@/components/NoteForm/NoteForm';
 import { fetchNotes, FetchNotesResponse } from '@/lib/api';
-import css from './NotesPage.module.css'
+import css from './NotesPage.module.css';
 import { NoteTag } from '@/types/note';
 
 interface NotesClientProps {
@@ -18,23 +18,22 @@ interface NotesClientProps {
 }
 
 export default function NotesClient({ initialData, tag }: NotesClientProps) {
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
-    const { data } = useQuery({
+    const { data, isLoading, isError } = useQuery<FetchNotesResponse>({
         queryKey: ['notes', searchQuery, currentPage, tag],
         queryFn: () =>
             fetchNotes(
                 currentPage,
                 12,
                 searchQuery,
-                tag !== 'All' ? tag : undefined
+                tag !== 'All' ? (tag as string) : undefined
             ),
-        initialData,
+        // Критичні покращення для уникнення "мерехтіння" при пагінації
+        placeholderData: initialData,
     });
 
-    const toggleModal = () => setIsModalOpen((prev) => !prev);
     const changeSearchQuery = useDebouncedCallback((newQuery: string) => {
         setCurrentPage(1);
         setSearchQuery(newQuery);
@@ -48,25 +47,30 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
             <main>
                 <section>
                     <header className={css.toolbar}>
-                        <SearchBox value={searchQuery}
-                            onChange={changeSearchQuery} />
-                        {totalPages > 1 && (
-                            <Pagination
-                                totalPages={totalPages}
-                                currentPage={currentPage}
-                                onPageChange={setCurrentPage}
-                            />
-                        )}
-                        <button className={css.button} onClick={toggleModal}>
-                            Create note +
-                        </button>
+                        <SearchBox value={searchQuery} onChange={changeSearchQuery} />
+
+                        <div className={css.actions}>
+                            <Link href="/notes/action/create" className={css.button}>
+                                Create note +
+                            </Link>
+
+                            {totalPages > 1 && (
+                                <Pagination
+                                    totalPages={totalPages}
+                                    currentPage={currentPage}
+                                    onPageChange={setCurrentPage}
+                                />
+                            )}
+                        </div>
                     </header>
 
-                    {isModalOpen && (
-                        <Modal onClose={toggleModal}>
-                            <NoteForm onClose={toggleModal} />
-                        </Modal>
+                    {isLoading && <p className={css.info}>Loading notes…</p>}
+                    {isError && <p className={css.error}>Failed to load notes. Try again later.</p>}
+
+                    {!isLoading && notes.length === 0 && (
+                        <p className={css.info}>No notes found.</p>
                     )}
+
                     {notes.length > 0 && <NoteList notes={notes} />}
                 </section>
             </main>

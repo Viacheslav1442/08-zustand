@@ -5,6 +5,10 @@ export interface Note {
     content: string;
     createdAt: string;
     updatedAt: string;
+    description?: string;
+    excerpt?: string;
+    coverUrl?: string;
+    image?: string;
 }
 
 export interface NewNoteData {
@@ -24,3 +28,6 @@ export interface FetchNoteResponse {
 
 
 export type NoteTag = 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
+
+
+
