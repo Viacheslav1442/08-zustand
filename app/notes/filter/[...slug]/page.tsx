@@ -1,15 +1,14 @@
 import type { FetchNotesResponse } from "@/lib/api";
 import { fetchNotes } from "@/lib/api";
-import NotesClient from "../[...slug]/Notes.client";
+import NotesClient from "./Notes.client";
 import type { Metadata } from "next";
 
 type Props = {
-    params: Promise<{ slug?: string[] }>;
+    params: { slug: string[] };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { slug } = await params;
-    const rawTag = slug?.[0] ?? "All";
+    const rawTag = params.slug?.[0] ?? "All";
     const tagForUI = decodeURIComponent(rawTag);
 
     const title =
@@ -34,6 +33,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                     ? "https://your-site.com/notes"
                     : `https://your-site.com/notes/filter/${encodeURIComponent(tagForUI)}`,
             siteName: "NoteHub",
+            images: [
+                {
+                    url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+                    width: 1200,
+                    height: 630,
+                    alt: `NoteHub — ${tagForUI}`,
+                },
+            ],
         },
         alternates: {
             canonical:
@@ -45,8 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-    const resolvedParams = await params;
-    const tag = resolvedParams.slug?.[0] ?? "All";
+    const tag = params.slug?.[0] ?? "All";
 
     const data: FetchNotesResponse = await fetchNotes(
         1,
