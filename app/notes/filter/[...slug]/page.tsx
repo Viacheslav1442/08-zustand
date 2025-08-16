@@ -4,11 +4,12 @@ import NotesClient from "./Notes.client";
 import type { Metadata } from "next";
 
 type Props = {
-    params: { slug?: string[] };
+    params: Promise<{ slug?: string[] }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const rawTag = params.slug?.[0] ?? "All";
+    const { slug } = await params;
+    const rawTag = slug?.[0] ?? "All";
     const tagForUI = decodeURIComponent(rawTag);
 
     const title =
@@ -52,7 +53,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-    const tag = params.slug?.[0] ?? "All";
+    const resolvedParams = await params;
+    const tag = resolvedParams.slug?.[0] ?? "All";
 
     const data: FetchNotesResponse = await fetchNotes(
         1,
