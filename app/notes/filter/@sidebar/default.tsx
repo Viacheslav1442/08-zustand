@@ -1,19 +1,12 @@
-import Link from 'next/link';
+import css from "./SidebarNotes.module.css";
+import Link from "next/link";
 
-import css from './SidebarNotes.module.css';
-import { NoteTag } from '@/types/note';
+const tags = ["All", "Todo", "Work", "Personal", "Meeting", "Shopping"];
 
-const tags: NoteTag[] = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
-
-export default async function SidebarNotes() {
+export default function SidebarNotes() {
     return (
         <ul className={css.menuList}>
-            <li className={css.menuItem}>
-                <Link href={`/notes/filter/All`} className={css.menuLink}>
-                    All notes
-                </Link>
-            </li>
-            {tags.map((tag) => (
+            {tags.map(tag => (
                 <li key={tag} className={css.menuItem}>
                     <Link href={`/notes/filter/${tag}`} className={css.menuLink}>
                         {tag}
@@ -22,4 +15,4 @@ export default async function SidebarNotes() {
             ))}
         </ul>
     );
-}
+};
