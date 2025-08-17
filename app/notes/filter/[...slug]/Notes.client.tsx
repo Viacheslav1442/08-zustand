@@ -30,7 +30,7 @@ export default function NotesClient({ initialData, tag }: NotesClientProps) {
                 searchQuery,
                 tag !== 'All' ? (tag as string) : undefined
             ),
-        // Критичні покращення для уникнення "мерехтіння" при пагінації
+
         placeholderData: initialData,
     });
 

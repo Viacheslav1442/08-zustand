@@ -37,7 +37,7 @@ export default async function Page({ params }: Props) {
     const data: FetchNotesResponse = await fetchNotes(
         1,
         12,
-        "",  // search порожній
+        "",
         tag !== "All" ? tag : undefined
     );
 
