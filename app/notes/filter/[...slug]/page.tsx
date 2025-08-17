@@ -31,23 +31,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-export default async function NotesPage({ params }: Props) {
+export default async function Page({ params }: Props) {
     const resolvedParams = await params;
-    const tag = resolvedParams.slug?.[0] === "All" ? undefined : resolvedParams.slug?.[0];
+    const tag = resolvedParams.slug?.[0] ?? "All";
 
-    let initialData: FetchNotesResponse;
+    const data: FetchNotesResponse = await fetchNotes(
+        1,
+        12,
+        "",  // search порожній
+        tag !== "All" ? tag : undefined
+    );
 
-    try {
-        initialData = await fetchNotes(1, 12, "", tag);
-
-        if (!initialData.notes.length) {
-            const fallback = await fetchNotes(1, 12);
-            initialData = fallback;
-        }
-    } catch (err) {
-        console.error("fetchNotes failed:", err);
-        initialData = { total: 0, notes: [], totalPages: 0, page: 1, perPage: 12 };
-    }
-
-    return <NotesClient initialData={initialData} tag={tag || "All"} />;
+    return <NotesClient initialData={data} tag={tag} />;
 }
