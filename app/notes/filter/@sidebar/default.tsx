@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import css from './sidebarNotes.module.css';
+import css from './SidebarNotes.module.css';
 import { NoteTag } from '@/types/note';
 
 const tags: NoteTag[] = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
