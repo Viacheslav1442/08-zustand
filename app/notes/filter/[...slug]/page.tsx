@@ -38,7 +38,13 @@ export default async function FilteredNotesPage({ params }: Props) {
     let initialData: FetchNotesResponse;
 
     try {
+
         initialData = await fetchNotes(1, 12, "", tag);
+
+        if (!initialData.notes.length) {
+            const fallback = await fetchNotes(1, 12);
+            initialData = fallback;
+        }
     } catch (err) {
         console.error("fetchNotes failed:", err);
 
