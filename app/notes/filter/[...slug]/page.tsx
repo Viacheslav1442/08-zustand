@@ -4,62 +4,44 @@ import NotesClient from "./Notes.client";
 import type { Metadata } from "next";
 
 type Props = {
-    params: { slug?: string[] };
+    params: Promise<{ slug: string[] }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const rawTag = params.slug?.[0] ?? "All";
-    const tagForUI = decodeURIComponent(rawTag);
-
-    const title =
-        tagForUI === "All"
-            ? "Notes — All | NoteHub"
-            : `Notes tagged “${tagForUI}” | NoteHub`;
-
-    const description =
-        tagForUI === "All"
-            ? "Browse all notes on NoteHub."
-            : `Browse notes filtered by the “${tagForUI}” tag on NoteHub.`;
+    const resolvedParams = await params;
+    const tag = resolvedParams.slug[0] === "All" ? undefined : resolvedParams.slug[0];
 
     return {
-        title,
-        description,
+        title: `Notes: ${tag || "All"}`,
+        description: `${tag || "All"} notes list`,
         openGraph: {
-            title,
-            description,
-            type: "website",
-            url:
-                tagForUI === "All"
-                    ? "https://your-site.com/notes"
-                    : `https://your-site.com/notes/filter/${encodeURIComponent(tagForUI)}`,
-            siteName: "NoteHub",
+            title: `Notes: ${tag || "All"}`,
+            description: `${tag || "All"} notes list`,
+            url: `https://08-zustand-ten-kappa.vercel.app/notes/filter/${tag || "All"}`,
             images: [
                 {
-                    url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+                    url: 'https://ac.goit.global/fullstack/react/og-meta.jpg',
                     width: 1200,
                     height: 630,
-                    alt: `NoteHub — ${tagForUI}`,
-                },
+                    alt: "NoteHub logo",
+                }
             ],
-        },
-        alternates: {
-            canonical:
-                tagForUI === "All"
-                    ? "/notes"
-                    : `/notes/filter/${encodeURIComponent(tagForUI)}`,
-        },
+            type: 'article',
+        }
     };
 }
 
-export default async function Page({ params }: Props) {
-    const tag = params.slug?.[0] ?? "All";
+export default async function FilteredNotesPage({ params }: Props) {
+    const resolvedParams = await params;
+    const tag = resolvedParams.slug[0] === "All" ? undefined : resolvedParams.slug[0];
 
-    const data: FetchNotesResponse = await fetchNotes(
-        1,
-        12,
-        "",
-        tag !== "All" ? tag : undefined
+
+    const initialData: FetchNotesResponse = await fetchNotes(
+        1,    // page
+        12,   // perPage
+        "",   // search
+        tag   // tag
     );
 
-    return <NotesClient initialData={data} tag={tag} />;
+    return <NotesClient initialData={initialData} tag={tag || 'All'} />;
 }
