@@ -5,9 +5,8 @@ const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 const instance = axios.create({
     baseURL: "https://notehub-public.goit.study/api",
-    headers: {
-        Authorization: `Bearer ${token}`,
-    },
+
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
 });
 
 
