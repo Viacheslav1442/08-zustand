@@ -30,7 +30,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
     };
 }
-
 export default async function Page({ params }: Props) {
     const resolvedParams = await params;
     const tag = resolvedParams.slug?.[0] ?? "All";
@@ -38,7 +37,7 @@ export default async function Page({ params }: Props) {
     const data: FetchNotesResponse = await fetchNotes(
         1,
         12,
-        "",
+        "",  // search порожній
         tag !== "All" ? tag : undefined
     );
 
