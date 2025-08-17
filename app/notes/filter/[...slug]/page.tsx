@@ -9,7 +9,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const resolvedParams = await params;
-    const tag = resolvedParams.slug[0] === "All" ? undefined : resolvedParams.slug[0];
+    const tag = resolvedParams.slug?.[0] === "All" ? undefined : resolvedParams.slug?.[0];
 
     return {
         title: `Notes: ${tag || "All"}`,
@@ -20,25 +20,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             url: `https://08-zustand-blue.vercel.app/notes/filter/${tag || "All"}`,
             images: [
                 {
-                    url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+                    url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
                     width: 1200,
                     height: 630,
                     alt: `Notes: ${tag || "All"}`,
-                }
+                },
             ],
-            type: 'article',
+            type: "article",
         },
     };
 }
 
-export default async function FilteredNotesPage({ params }: Props) {
+export default async function NotesPage({ params }: Props) {
     const resolvedParams = await params;
-    const tag = resolvedParams.slug[0] === "All" ? undefined : resolvedParams.slug[0];
+    const tag = resolvedParams.slug?.[0] === "All" ? undefined : resolvedParams.slug?.[0];
 
     let initialData: FetchNotesResponse;
 
     try {
-
         initialData = await fetchNotes(1, 12, "", tag);
 
         if (!initialData.notes.length) {
@@ -47,7 +46,6 @@ export default async function FilteredNotesPage({ params }: Props) {
         }
     } catch (err) {
         console.error("fetchNotes failed:", err);
-
         initialData = { total: 0, notes: [], totalPages: 0, page: 1, perPage: 12 };
     }
 
